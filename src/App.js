@@ -1,23 +1,34 @@
-import logo from './logo.svg';
 import './App.css';
+import Countries from "./countriesAll.json";
+import image from "./allcountresglag.jpg";
+
+function CreateCardForCountry (props) {
+   return (props.list.map(country => {
+    return (
+      <div className="CountryCard">
+        <img src={image} className="flagImage" alt="" />
+        <div className="GeneralInfo">
+          <h3 className="CountryName">{country.name}</h3>
+          <p>
+            <b>Population:</b> {country.population}
+          </p>
+          <p>
+            <b>Region:</b> {country.region}
+          </p>
+          <p>
+            <b>Capital:</b> {country.capital}
+          </p>
+        </div>
+      </div>
+    );
+  })
+  )
+}
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <CreateCardForCountry list={Countries}/>
     </div>
   );
 }

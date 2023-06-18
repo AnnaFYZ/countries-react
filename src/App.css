@@ -1,10 +1,35 @@
 .App {
-  text-align: center;
+  display: flex;
+  flex-wrap: wrap;
+  background-color:lightgrey;
 }
 
 .App-logo {
   height: 40vmin;
   pointer-events: none;
+}
+
+.flagImage {
+  width: 250px;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.CountryCard {
+  display: flex;;
+  flex-direction: column;
+  margin: 2rem;
+  background-color: whitesmoke;
+  max-width: 250px;
+}
+
+.GeneralInfo {
+  margin: 0 2rem 2rem 2rem;
+}
+
+.CountryName {
+  font-size: larger;
+  margin: 2rem 0;
 }
 
 @media (prefers-reduced-motion: no-preference) {
