@@ -1,10 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
 import Countries from "./countriesAll.json";
-import { useEffect } from 'react';
+import SelectByRegion from './SelectByRegion';
 
 function CreateCardForCountry (props) {
-   
    return (
      <div className="CardDiv">
        {props.list.map((country) => (
@@ -48,16 +47,26 @@ return <div>
 
 function App() {
   let [countryList, setCountryList] = useState(Countries);
+  let [filteredByRegion, setFilteredByRegion] = useState(Countries);
+
+  const searchByRegion = (region) => {
+    region !== "Select region..."
+      ? setCountryList(
+          Countries.filter((country) => country.region === region)
+        )
+      : setFilteredByRegion(Countries);
+  }
+  
   const searchOption = (searchInput) => {
-    console.log(searchInput)
     searchInput !=="" ?
-    setCountryList(Countries.filter((country) => country.name.toLocaleLowerCase().includes(searchInput.toLowerCase()) || country.capital.toLocaleLowerCase().includes(searchInput.toLocaleLowerCase())))
-     : setCountryList(Countries)
+    setCountryList(countryList.filter((country) => country.name.toLocaleLowerCase().includes(searchInput.toLowerCase()) || country.capital.toLocaleLowerCase().includes(searchInput.toLocaleLowerCase())))
+     : setCountryList(filteredByRegion)
       }
   
   return (
     <div className="App">
       <Search search={searchOption}/>
+      <SelectByRegion listForOptions={Countries} search={searchByRegion}/>
       <CreateCardForCountry list={countryList}/>
     </div>
   );
