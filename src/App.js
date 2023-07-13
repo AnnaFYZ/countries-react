@@ -1,12 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import './App.css';
 import Countries from "./countriesAll.json";
 import SelectByRegion from './SelectByRegion';
+import Search from './Search';
 
 function CreateCardForCountry (props) {
-   return (
+     return (
      <div className="CardDiv">
-       {props.list.map((country) => (
+       {props.list.filter((country) => props.filters.region === "Select region..." 
+       ? true : country.region === props.filters.region)
+       .filter((country) => props.filters.searchInput === ""
+       ? true : country.name.toLocaleLowerCase().includes(props.filters.searchInput) || country.capital.toLocaleLowerCase().includes(props.filters.searchInput))
+       .map((country) => (
          <div className="CountryCard" key={country.name}>
            <img
              src={`https://flagcdn.com/w160/${country.alpha2Code.toLowerCase()}.png`}
@@ -31,43 +36,31 @@ function CreateCardForCountry (props) {
    );
   }
 
-const Search = (props) => {
-  const [searchInput, setSearchInput] = useState("");
-  function handleSearchInput (event) {
-    setSearchInput(event.target.value)
-  }
-  useEffect(() => {props.search(searchInput)}, [searchInput]);
-return <div>
-  <input className='searchInput' type="text" placeholder='Type here what you are looking for ...'
-  value={searchInput}
-  onChange={handleSearchInput}
-  ></input>
-</div>
-}
-
 function App() {
-  let [countryList, setCountryList] = useState(Countries);
-  let [filteredByRegion, setFilteredByRegion] = useState(Countries);
+  let [filters, setFilters] = useState({
+    region: "Select region...",
+    searchInput: "",
+  });
 
   const searchByRegion = (region) => {
     region !== "Select region..."
-      ? setCountryList(
-          Countries.filter((country) => country.region === region)
-        )
-      : setFilteredByRegion(Countries);
+    ? setFilters({...filters, "region": region})
+    : setFilters({...filters, "region": "Select region..."})
   }
   
   const searchOption = (searchInput) => {
-    searchInput !=="" ?
-    setCountryList(countryList.filter((country) => country.name.toLocaleLowerCase().includes(searchInput.toLowerCase()) || country.capital.toLocaleLowerCase().includes(searchInput.toLocaleLowerCase())))
-     : setCountryList(filteredByRegion)
+    searchInput !=="" 
+    ? setFilters({...filters, "searchInput" : searchInput.toLowerCase()})
+    : setFilters({...filters, "searchInput" : ""})
+    // setCountryList(filteredByRegion.filter((country) => country.name.toLocaleLowerCase().includes(searchInput.toLowerCase()) || country.capital.toLocaleLowerCase().includes(searchInput.toLocaleLowerCase())))
+    //  : setCountryList(filteredByRegion)
       }
   
   return (
     <div className="App">
       <Search search={searchOption}/>
       <SelectByRegion listForOptions={Countries} search={searchByRegion}/>
-      <CreateCardForCountry list={countryList}/>
+      <CreateCardForCountry list={Countries} filters={filters}/>
     </div>
   );
 }
